@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{.Values.microservices.mysvc.serviceName}}'
+  labels:
+    app: '{{.Values.microservices.mysvc.serviceName}}'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: '{{.Values.microservices.mysvc.serviceName}}'
+  template:
+    metadata:
+      labels:
+        app: '{{.Values.microservices.mysvc.serviceName}}'
+    spec:
+      containers:
+      - name: '{{.Values.microservices.mysvc.serviceName}}'
+        image: '{{.Values.microservices.mysvc.dockerImage}}'
+        ports:
+        - containerPort: 8080
+        env:
+        - name: '{{.Values.microservices.mysvc.envs.MYSQL_DATABASE.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.mysvc.serviceName}}'
+              key: '{{.Values.microservices.mysvc.envs.MYSQL_DATABASE.name}}'
+        - name: '{{.Values.microservices.mysvc.envs.DB_HOST.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.mysvc.serviceName}}'
+              key: '{{.Values.microservices.mysvc.envs.DB_HOST.name}}'
+        - name: '{{.Values.microservices.mysvc.envs.DB_USERNAME.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.mysvc.serviceName}}'
+              key: '{{.Values.microservices.mysvc.envs.DB_USERNAME.name}}'
+        - name: '{{.Values.microservices.mysvc.envs.DB_PASSWORD.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.mysvc.serviceName}}'
+              key: '{{.Values.microservices.mysvc.envs.DB_PASSWORD.name}}'
+        - name: '{{.Values.microservices.mysvc.envs.MYSQL_ROOT_PASSWORD.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.mysvc.serviceName}}'
+              key: '{{.Values.microservices.mysvc.envs.MYSQL_ROOT_PASSWORD.name}}'
